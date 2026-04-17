@@ -1,0 +1,12 @@
+Falling back to mock provider: No module named 'openai'
+Traceback (most recent call last):
+  File "C:\Users\nak11\python\aithucchien\lab12-LuongAnhTuan-2A202600113\06-lab-complete\production_support.py", line 162, in build_provider
+    from src.core.openai_provider import OpenAIProvider
+  File "C:\Users\nak11\python\aithucchien\lab12-LuongAnhTuan-2A202600113\06-lab-complete\src\core\openai_provider.py", line 4, in <module>
+    from openai import OpenAI
+ModuleNotFoundError: No module named 'openai'
+{"timestamp": "2026-04-17T14:28:38.115132", "event": "SYSTEM_READY", "data": {"provider": "mock", "model": "deepseek-ai/deepseek-v3.2", "tools": ["check_weather", "search_hotels", "search_activities"], "storage_backend": "memory"}}
+{"timestamp": "2026-04-17T14:28:38.117137", "event": "REQUEST_START", "data": {"user_id": "check-user", "session_id": "rate-check", "mode": "agent_v2", "require_auth": true, "storage_backend": "memory"}}
+{"timestamp": "2026-04-17T14:28:39.322701", "event": "REQUEST_END", "data": {"user_id": "check-user", "session_id": "rate-check", "mode": "agent_v2", "steps_count": 10, "storage_backend": "memory"}}
+{"timestamp": "2026-04-17T14:28:39.323713", "event": "REQUEST_START", "data": {"user_id": "demo-user", "session_id": "ui-session", "mode": "chatbot", "require_auth": false, "storage_backend": "memory"}}
+{"timestamp": "2026-04-17T14:28:39.431896", "event": "REQUEST_END", "data": {"user_id": "demo-user", "session_id": "ui-session", "mode": "chatbot", "steps_count": 0, "storage_backend": "memory"}}

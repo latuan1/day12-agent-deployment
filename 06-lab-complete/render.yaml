@@ -1,23 +1,28 @@
 services:
   - type: web
-    name: ai-agent-production
-    runtime: docker
-    region: singapore
-    plan: starter
+    name: travel-planning-agent
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn -w 2 -k gthread --threads 4 -b 0.0.0.0:$PORT app:app
     healthCheckPath: /health
     autoDeploy: true
     envVars:
       - key: ENVIRONMENT
         value: production
-      - key: APP_VERSION
-        value: "1.0.0"
-      - key: OPENAI_API_KEY
-        sync: false
+      - key: PORT
+        value: 8000
       - key: AGENT_API_KEY
         generateValue: true
-      - key: JWT_SECRET
-        generateValue: true
-      - key: DAILY_BUDGET_USD
-        value: "5.0"
-      - key: RATE_LIMIT_PER_MINUTE
-        value: "20"
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: travel-planning-redis
+          property: connectionString
+      - key: DEFAULT_PROVIDER
+        value: mock
+
+  - type: redis
+    name: travel-planning-redis
+    plan: free
+    maxmemoryPolicy: allkeys-lru

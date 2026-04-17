@@ -45,7 +45,7 @@ Create a file `MISSION_ANSWERS.md` with your answers to all exercises:
 ## Part 3: Cloud Deployment
 
 ### Exercise 3.1: Railway deployment
-- URL: https://your-app.railway.app
+- URL: https://zesty-insight-production.up.railway.app/
 - Screenshot: [Link to screenshot in repo]
 
 ## Part 4: API Security

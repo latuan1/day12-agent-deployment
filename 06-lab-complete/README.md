@@ -1,100 +1,56 @@
-# Lab 12 — Complete Production Agent
+# Lab 3: Chatbot vs ReAct Agent (Industry Edition)
 
-Kết hợp TẤT CẢ những gì đã học trong 1 project hoàn chỉnh.
+Welcome to Phase 3 of the Agentic AI course! This lab focuses on moving from a simple LLM Chatbot to a sophisticated **ReAct Agent** with industry-standard monitoring.
 
-## Checklist Deliverable
+## 🚀 Getting Started
 
-- [x] Dockerfile (multi-stage, < 500 MB)
-- [x] docker-compose.yml (agent + redis)
-- [x] .dockerignore
-- [x] Health check endpoint (`GET /health`)
-- [x] Readiness endpoint (`GET /ready`)
-- [x] API Key authentication
-- [x] Rate limiting
-- [x] Cost guard
-- [x] Config từ environment variables
-- [x] Structured logging
-- [x] Graceful shutdown
-- [x] Public URL ready (Railway / Render config)
-
----
-
-## Cấu Trúc
-
-```
-06-lab-complete/
-├── app/
-│   ├── main.py         # Entry point — kết hợp tất cả
-│   ├── config.py       # 12-factor config
-│   ├── auth.py         # API Key + JWT
-│   ├── rate_limiter.py # Rate limiting
-│   └── cost_guard.py   # Budget protection
-├── Dockerfile          # Multi-stage, production-ready
-├── docker-compose.yml  # Full stack
-├── railway.toml        # Deploy Railway
-├── render.yaml         # Deploy Render
-├── .env.example        # Template
-├── .dockerignore
-└── requirements.txt
-```
-
----
-
-## Chạy Local
-
+### 1. Setup Environment
+Copy the `.env.example` to `.env` and fill in your API keys:
 ```bash
-# 1. Setup
 cp .env.example .env
-
-# 2. Chạy với Docker Compose
-docker compose up
-
-# 3. Test
-curl http://localhost/health
-
-# 4. Lấy API key từ .env, test endpoint
-API_KEY=$(grep AGENT_API_KEY .env | cut -d= -f2)
-curl -H "X-API-Key: $API_KEY" \
-     -X POST http://localhost/ask \
-     -H "Content-Type: application/json" \
-     -d '{"question": "What is deployment?"}'
 ```
 
----
-
-## Deploy Railway (< 5 phút)
-
+### 2. Install Dependencies
 ```bash
-# Cài Railway CLI
-npm i -g @railway/cli
-
-# Login và deploy
-railway login
-railway init
-railway variables set OPENAI_API_KEY=sk-...
-railway variables set AGENT_API_KEY=your-secret-key
-railway up
-
-# Nhận public URL!
-railway domain
+pip install -r requirements.txt
 ```
+
+### 3. Directory Structure
+- `src/tools/`: Extension point for your custom tools.
+
+## 🏠 Running with Local Models (CPU)
+
+If you don't want to use OpenAI or Gemini, you can run open-source models (like Phi-3) directly on your CPU using `llama-cpp-python`.
+
+### 1. Download the Model
+Download the **Phi-3-mini-4k-instruct-q4.gguf** (approx 2.2GB) from Hugging Face:
+- [Phi-3-mini-4k-instruct-GGUF](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf)
+- Direct Download: [phi-3-mini-4k-instruct-q4.gguf](https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf/resolve/main/Phi-3-mini-4k-instruct-q4.gguf)
+
+### 2. Place Model in Project
+Create a `models/` folder in the root and move the downloaded `.gguf` file there.
+
+### 3. Update `.env`
+Change your `DEFAULT_PROVIDER` and set the path:
+```env
+DEFAULT_PROVIDER=local
+LOCAL_MODEL_PATH=./models/Phi-3-mini-4k-instruct-q4.gguf
+```
+
+## 🎯 Lab Objectives
+
+1.  **Baseline Chatbot**: Observe the limitations of a standard LLM when faced with multi-step reasoning.
+2.  **ReAct Loop**: Implement the `Thought-Action-Observation` cycle in `src/agent/agent.py`.
+3.  **Provider Switching**: Swap between OpenAI and Gemini seamlessly using the `LLMProvider` interface.
+4.  **Failure Analysis**: Use the structured logs in `logs/` to identify why the agent fails (hallucinations, parsing errors).
+5.  **Grading & Bonus**: Follow the [SCORING.md](file:///Users/tindt/personal/ai-thuc-chien/day03-lab-agent/SCORING.md) to maximize your points and explore bonus metrics.
+
+## 🛠️ How to Use This Baseline
+The code is designed as a **Production Prototype**. It includes:
+- **Telemetry**: Every action is logged in JSON format for later analysis.
+- **Robust Provider Pattern**: Easily extendable to any LLM API.
+- **Clean Skeletons**: Focus on the logic that matters—the agent's reasoning process.
 
 ---
 
-## Deploy Render
-
-1. Push repo lên GitHub
-2. Render Dashboard → New → Blueprint
-3. Connect repo → Render đọc `render.yaml`
-4. Set secrets: `OPENAI_API_KEY`, `AGENT_API_KEY`
-5. Deploy → Nhận URL!
-
----
-
-## Kiểm Tra Production Readiness
-
-```bash
-python check_production_ready.py
-```
-
-Script này kiểm tra tất cả items trong checklist và báo cáo những gì còn thiếu.
+*Happy Coding! Let's build agents that actually work.*

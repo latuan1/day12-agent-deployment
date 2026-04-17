@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Atlas Command Deck</title>
+    <meta name="description" content="A new command-deck interface for the travel planning agent.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/style-atlas.css">
+</head>
+<body>
+    <div class="backdrop">
+        <div class="grid-overlay"></div>
+        <div class="glow glow-a"></div>
+        <div class="glow glow-b"></div>
+        <div class="glow glow-c"></div>
+    </div>
+
+    <div class="shell">
+        <aside class="rail rail-left" id="sidebar">
+            <div class="brand card">
+                <div class="brand-mark">AD</div>
+                <div class="brand-copy">
+                    <p class="eyebrow">Travel intelligence</p>
+                    <h1>Atlas Command Deck</h1>
+                    <p class="brand-text">A darker, sharper workspace for planning trips, checking weather, and tracing agent steps.</p>
+                </div>
+            </div>
+
+            <div class="status card">
+                <div>
+                    <p class="eyebrow">Runtime</p>
+                    <strong id="deploymentLabel">Loading environment…</strong>
+                </div>
+                <span class="status-pill" id="headerMode">Agent v2 · Ready</span>
+            </div>
+
+            <section class="auth-panel card">
+                <div class="section-head">
+                    <h2>Auth key</h2>
+                    <span class="section-tag">Required</span>
+                </div>
+                <label class="auth-field">
+                    <span>AGENT_API_KEY</span>
+                    <input id="apiKeyInput" type="password" placeholder="Enter API key" autocomplete="off" />
+                </label>
+                <div class="auth-actions">
+                    <button class="ghost-btn" id="saveApiKey" type="button">Save key</button>
+                    <button class="ghost-btn ghost-btn-secondary" id="clearApiKey" type="button">Clear</button>
+                </div>
+                <p class="auth-hint">The chat will send `X-API-Key` to the protected endpoint.</p>
+            </section>
+
+            <section class="controls card">
+                <div class="section-head">
+                    <h2>Mode deck</h2>
+                    <span class="section-tag">3</span>
+                </div>
+                <div class="mode-list">
+                    <button class="mode-btn" data-mode="chatbot" type="button">
+                        <span class="mode-icon">◌</span>
+                        <span>
+                            <strong>Chatbot</strong>
+                            <small>Direct answers</small>
+                        </span>
+                    </button>
+                    <button class="mode-btn" data-mode="agent_v1" type="button">
+                        <span class="mode-icon">◈</span>
+                        <span>
+                            <strong>Agent v1</strong>
+                            <small>Single-loop tools</small>
+                        </span>
+                    </button>
+                    <button class="mode-btn active" data-mode="agent_v2" type="button">
+                        <span class="mode-icon">✦</span>
+                        <span>
+                            <strong>Agent v2</strong>
+                            <small>Guarded orchestration</small>
+                        </span>
+                    </button>
+                </div>
+            </section>
+
+            <section class="controls card">
+                <div class="section-head">
+                    <h2>Mission prompts</h2>
+                    <span class="section-tag">Try</span>
+                </div>
+                <div class="prompt-list" id="testCases"></div>
+            </section>
+
+            <section class="controls card">
+                <div class="section-head">
+                    <h2>Tool kit</h2>
+                    <span class="section-tag">3</span>
+                </div>
+                <div class="tool-list">
+                    <span class="tool-chip">check_weather</span>
+                    <span class="tool-chip">search_hotels</span>
+                    <span class="tool-chip">search_activities</span>
+                </div>
+            </section>
+
+            <footer class="rail-footer card">
+                <button class="ghost-btn" id="clearChat" type="button">Reset session</button>
+                <p>OpenAI-compatible • Claude Sonnet 4-6 • Railway • Auth required</p>
+            </footer>
+        </aside>
+
+        <main class="stage">
+            <header class="hero card">
+                <button class="icon-btn menu-toggle" id="menuToggle" type="button" aria-label="Toggle sidebar">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <line x1="3" y1="12" x2="21" y2="12"></line>
+                        <line x1="3" y1="18" x2="21" y2="18"></line>
+                    </svg>
+                </button>
+                <div class="hero-copy">
+                    <p class="eyebrow">Command center</p>
+                    <h2>Ask for routes, stays, and weather plans in plain language.</h2>
+                    <p class="hero-text">The interface is rebuilt from scratch around a darker deck aesthetic with a focused conversation area and trace panel.</p>
+                </div>
+                <div class="hero-meta">
+                    <span class="meta-chip">Live</span>
+                    <strong id="inputModeIndicator">✦ Agent v2</strong>
+                    <small>Enter sends, Shift+Enter adds a line</small>
+                </div>
+            </header>
+
+            <section class="conversation card" id="messagesContainer">
+                <div class="messages" id="messages">
+                    <article class="message bot-message welcome-message">
+                        <div class="avatar">AD</div>
+                        <div class="message-body">
+                            <div class="bubble">
+                                <p class="eyebrow">Start here</p>
+                                <h3>Mission deck online</h3>
+                                <p>This new layout removes the old editorial look and keeps attention on the travel task itself.</p>
+                                <ul>
+                                    <li>Weather windows for a destination</li>
+                                    <li>Hotels within a budget</li>
+                                    <li>Activities that match the forecast</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </section>
+
+            <section class="composer card">
+                <div class="composer-row">
+                    <textarea id="messageInput" rows="1" placeholder="Ask for a route, stay, or weather plan..."></textarea>
+                    <button class="send-btn" id="sendBtn" type="button" aria-label="Send message">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22,2 15,22 11,13 2,9"></polygon>
+                        </svg>
+                    </button>
+                </div>
+                <div class="composer-meta">
+                    <span class="composer-note">Session-aware • Model from .env • No API key box</span>
+                    <span class="composer-tip">Enter ↵ to send</span>
+                </div>
+            </section>
+        </main>
+
+        <aside class="rail rail-right" id="rightPanel">
+            <div class="panel-top card">
+                <div>
+                    <p class="eyebrow">Trace</p>
+                    <h2>Reasoning panel</h2>
+                </div>
+                <button class="icon-btn panel-close" id="closePanel" type="button" aria-label="Close reasoning panel">×</button>
+            </div>
+            <div class="panel-body card" id="panelContent">
+                <div class="empty-state">
+                    <div class="empty-icon">⌘</div>
+                    <h3>No trace yet</h3>
+                    <p>Send a prompt to reveal steps, metrics, and tool calls here.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
