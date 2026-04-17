@@ -1,5 +1,9 @@
 # Deployment Information
 
+> **Student Name:** Lương Anh Tuấn  
+> **Student ID:** 2A202600113  
+> **Date:** _17/04/2026_
+
 ## Public URL
 
 https://nurturing-cat-production-8ed3.up.railway.app/
